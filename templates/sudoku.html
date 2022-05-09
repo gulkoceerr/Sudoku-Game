@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% block header %}
+<script src="{{ url_for('static', filename='js/sudoku.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sudoku.css') }}">
+<title>Sudoku Oyunu | Sudoku Oyna</title>
+{% endblock header %}
+
+{% block content %}
+<script>
+    var last_selected_buttons_id = "";
+    var data = (JSON.parse('{{ data | tojson }}'));
+    data["numpad"] = data["numpad"].join().split(",")
+    console.log(data["numpad"])
+    // Seçili butonu belirleyen fonksiyonu tanımlıyoruz.
+    function select_button(id) {
+        last_selected_buttons_id = id;
+        console.log(row, column)
+        
+    }
+    // Seçilmiş butona içeriği gönderen fonksiyonu tanımlıyoruz.
+    function typeNow(content) {
+        if (last_selected_buttons_id !== "") {
+            selection = document.getElementById(last_selected_buttons_id)
+            selection.innerHTML = content;
+            row = String(last_selected_buttons_id).split("-")[0];
+            column = String(last_selected_buttons_id).split("-")[1];
+            data["last_game"][row][column] = content;
+            setTimeout(() => check(), 500);
+        }
+    }
+    function check() {
+        if (data["last_game_solved"].toString() == data["last_game"].toString()) {
+            alert("Tebrikler! Oyunuz başarıyla tamamlandı!")
+        } else {
+            console.log("Oyuna devam ediniz.")
+        }
+    };
+    // Klavyeden bir tuşa basıldığında çalışacak fonksiyonu tanımlıyoruz.
+    document.addEventListener('keypress', function onPress() {
+        if (data["numpad"].includes(event.key)) {
+            console.log(event.key)
+            typeNow(event.key)
+        }
+    })
+</script>
+
+<h1 class="text-dark mt-5 mb-3">Lütfen Seçim Yapınız</h1>
+<form class="select" action="/sudoku" method="POST">
+    <div class="btn-group btn-group-lg">
+        <input type="radio" class="btn-check" name="grid_type" id="4x4" value=4 checked />
+        <label class="btn btn-secondary btn-warning" for="4x4">4x4</label>
+        <input type="radio" class="btn-check" name="grid_type" id="6x6" value=6 />
+        <label class="btn btn-secondary btn-warning" for="6x6">6x6</label>
+        <input type="radio" class="btn-check" name="grid_type" id="8x8" value=8 />
+        <label class="btn btn-secondary btn-warning" for="8x8">8x8</label>
+        <input type="radio" class="btn-check" name="grid_type" id="9x9" value=9 />
+        <label class="btn btn-secondary btn-warning" for="9x9">9x9</label>
+    </div>
+    <br>
+    <br>
+    <div class="btn-group btn-group-lg">
+        <input type="radio" class="btn-check" name="level" id="kolay" value=0.25 checked />
+        <label class="btn btn-secondary btn-warning" for="kolay">kolay</label>
+
+        <input type="radio" class="btn-check" name="level" id="orta" value=0.5 />
+        <label class="btn btn-secondary btn-warning" for="orta">orta</label>
+
+        <input type="radio" class="btn-check" name="level" id="zor" value=0.75 />
+        <label class="btn btn-secondary btn-warning" for="zor">zor</label>
+    </div>
+    <br>
+    <br>
+    <div class="btn-group btn-group-lg">
+        <input type="radio" class="btn-check" name="version" id="numbers" value="numbers" checked />
+        <label class="btn btn-secondary btn-warning" for="numbers">Sayılar</label>
+        <input type="radio" class="btn-check" name="version" id="shapes" value="shapes" />
+        <label class="btn btn-secondary btn-warning" for="shapes">Şekiller</label>
+    </div>
+    <br>
+    <br>
+    <button class="btn btn-warning btn-lg" type="Submit" value="Submit">Yeni Oyun</button>
+</form>
+<!-- Template Variable'ları -->
+<table class="sudoku_grid">
+    <!-- Süslü parantezler HTML dökümanları içerisinde Python kodu yazabilmemize imkan tanır. -->
+    <!-- Satırları dönüyoruz -->
+    {% for i in range(data.grid_type) %}
+    <tr>
+        <!-- Sütunları dönüyoruz -->
+        {% for j in range(data.grid_type) %}
+        <!-- Sütun hücrelerini oluşturalım. Sütun hücrelerini oluştururken id'lerini dinamik olarak atıyoruz.-->
+        <td class="sudoku_cell">
+            <!-- Inputları oluşturalım. Inputları oluştururken id'lerini dinamik olarak atıyoruz.
+                class değerine "Input" veriyoruz
+                type'ını text yapıyoruz ki textbox olsun
+                maxlength'ini 1 yapıyoruz ki tek karakter girilebilsin
+                autocomplete off yapıyoruz ki otomatik doldurma opsiyonları karşımıza çıkmasın
+                value'sunu doğrudak sudoku listeler listesinin "[[],[]]"" gerekli satırının gerekli sütunundan çekip yerleştiriyoruz.
+            -->
+            <button class="btn btn-warning sudoku_text_input" id={{"{}-{}".format(i,j)}}
+                onclick="select_button(id)" type="button"
+                {{"disabled" if data["last_game"][i][j] !=0 }}>
+                {{ data["last_game"][i][j] if data["last_game"][i][j] != 0 else " " }}
+            </button>
+        </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+
+<table class="numpad_grid">
+    <tr>
+        {% for i in range(1, data.grid_type+1) %}
+        <td class="numpad_cell">
+            <button class="btn btn-warning numpad_buttons" class="numpad_buttons" onclick="typeNow(innerHTML)">{{
+                data.numpad[i-1] }}</button>
+        </td>
+        {% endfor %}
+    </tr>
+</table>
+
+<!-- {{ data.grid_type }}
+<hr>
+{{ data.last_game }}
+<hr>
+{{ data.last_game_solved }}
+<hr>
+{{ data.numpad }}
+<hr> 
+{{ data }}
+-->
+{% endblock content %}

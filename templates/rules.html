@@ -1,0 +1,39 @@
+{% extends 'base.html' %} 
+{% block header %}
+<script src="{{ url_for('static', filename='js/rules.js') }}"></script>
+<title>Sudoku Oyunu | Kurallar</title>
+{% endblock header %}
+{% block content %}
+
+<h1 class="text-danger mb-3">Sudokunun Kuralları</h1>
+
+<h2>4x4 Kareden Oluşan Sudoku İçin Kurallar</h2>
+<p>
+    <ul>
+        <li>Her satırda 1'den 4'e kadar olan tüm rakamlar sadece bir kez bulunmalıdır.</li>
+        <li>Her sütunda 1'den 4'e kadar olan tüm rakamlar sadece bir kez bulunmalıdır.</li>
+        <li>2x2 boyutundaki her bir bölgede 1'den 4'e kadar olan tüm rakamlar sadece bir kez bulunmalıdır.</li>
+    </ul>
+</p>
+<h2>6x6 Kareden Oluşan Sudoku İçin Kurallar</h2>
+<p>
+    •Her satırda 1'den 6'ya kadar olan tüm rakamlar sadece bir kez bulunmalıdır.<br>
+    •Her sütunda 1'den 6'ya kadar olan tüm rakamlar sadece bir kez bulunmalıdır.<br>
+    •2x3 boyutundaki her bir bölgede 1'den 6'ya kadar olan tüm rakamlar sadece bir kez bulunmalıdır.
+</p>
+<h2>8x8 Kareden Oluşan Sudoku İçin Kurallar</h2>
+<p>
+    •Her satırda 1'den 8'e kadar olan tüm rakamlar sadece bir kez bulunmalıdır.<br>
+    •Her sütunda 1'den 8'e kadar olan tüm rakamlar sadece bir kez bulunmalıdır.<br>
+    •2x4 boyutundaki her bir bölgede 1'den 8'e kadar olan tüm rakamlar sadece bir kez bulunmalıdır.
+</p>
+<h2>9x9 Kareden Oluşan Sudoku İçin Kurallar</h2>
+<p>
+    •Her satırda 1'den 9'a kadar olan tüm rakamlar sadece bir kez bulunmalıdır.<br>
+    •Her sütunda 1'den 9'a kadar olan tüm rakamlar sadece bir kez bulunmalıdır.<br>
+    •3x3 boyutundaki her bir bölgede 1'den 9'a kadar olan tüm rakamlar sadece bir kez bulunmalıdır.
+</p>
+{% endblock content %}
+
+
+

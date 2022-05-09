@@ -1,0 +1,13 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    line-height: 36px;
+}
+
+#main {
+    height: 100%;
+    width: 80%;
+    margin: auto;
+}
